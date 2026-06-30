@@ -4,7 +4,11 @@ let started = false
 let level = 0
 let highScore = 0
 
+const validColors = ['red', 'green', 'yellow', 'blue']
+
 const h3 = document.querySelector('h3')
+const high = document.querySelector('h2 > span')
+high.textContent = `${highScore}`
 const colorElements = document.querySelectorAll('#colors-container > div')
 
 //event listenere keypress to detect of game started
@@ -25,10 +29,10 @@ const flash = {
     
     //function to blink this target color element
     blink: function() {
-        this.color.style.background = 'white'
+        this.color.classList.add('flash')
 
         setTimeout( () => {
-            this.color.style.background = `${this.color.id}`
+            this.color.classList.remove('flash')
         }, 100)
     }
 }
@@ -39,19 +43,17 @@ function levelUp() {
     h3.textContent = `Level: ${++level}`
 
     //generate random number from 1 to 4
-    let random = Math.floor(Math.random() * 4) + 1
+    let random = Math.floor(Math.random() * 4)
 
     //searches an right color element to blink according to random number and to put that color onto 
     // currentCombination array to store the current combination that  user should follow in order 
     //to level their up
-    for(let color of colorElements) {
-        if(color.children[0].textContent === `${random}`) {
-            flash.color = color
-            flash.blink()
-            currentCombination.push(`${color.id}`)
-            break
-        }
-    }
+    let randColor = validColors[random]
+    currentCombination.push(randColor)
+
+    const colorBlock = document.querySelector(`#${randColor}`)
+    flash.color = colorBlock
+    flash.blink()
 }
 
 
@@ -64,7 +66,6 @@ document.addEventListener('click', function(e) {
 
     //Prevention:when we started a game and we accidently click anywhere other than target game colors 
     //do not end the game
-    const validColors = ['red', 'green', 'yellow', 'blue']
     if(!validColors.includes(e.target.id)) return 
 
     flash.color = e.target
@@ -74,9 +75,12 @@ document.addEventListener('click', function(e) {
     
     if(e.target.id !== currentCombination[i]) {  //user failed
         let currentScore = currentCombination.length - 1
-        if(currentScore > highScore) highScore = currentScore
+        if(currentScore > highScore) {
+            highScore = currentScore
+            high.textContent = `${highScore}`
+        }
 
-        h3.innerHTML = `OOPS you lost<br>Your Score: ${currentScore}<br>Higher Score: ${highScore}`
+        h3.innerHTML = `OOPS you lost<br>Your Score: ${currentScore}<br>Enter any key to start the Game again`
 
         started = false
         currentCombination = []
