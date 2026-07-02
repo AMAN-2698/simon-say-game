@@ -11,15 +11,18 @@ const high = document.querySelector('h2 > span')
 high.textContent = `${highScore}`
 const colorElements = document.querySelectorAll('#colors-container > div')
 
-//event listenere keypress to detect of game started
-document.addEventListener('keypress', function(e) {
+
+const startGame = function(e) {
     //Prevention: stop engaging keypress when game started 
     //only allows to interrupt keys when game is over or ready to start
     if(started) return
     
     started = true
     levelUp()
-})
+}
+
+//event listenere keypress to detect of game started
+document.addEventListener('keypress', startGame)
 
 //beautiful object to store the target color element which is gonna blink using its method
 //blink when level up or click on valid color element
@@ -59,10 +62,14 @@ function levelUp() {
 
 let i = 0 //tracks index according to user combination to compare with currentCombination for validation
 
-document.addEventListener('click', function(e) {
-    //Prevention:prevents to click when game is over or new start, only allows to enter an keyboard key to start the 
-    // fresh game or a new game
-    if(!started) return
+const chaseGameStat = function(e) {
+    //used to start the game when clicked on the screen
+    //allows to use this on mobile, as keypress cannot trigger the start on mobile
+    if(!started) {
+        started = true
+        levelUp()
+        return
+    }
 
     //Prevention:when we started a game and we accidently click anywhere other than target game colors 
     //do not end the game
@@ -80,7 +87,7 @@ document.addEventListener('click', function(e) {
             high.textContent = `${highScore}`
         }
 
-        h3.innerHTML = `OOPS you lost<br>Your Score: ${currentScore}<br>Enter any key to start the Game again`
+        h3.innerHTML = `OOPS you lost<br>Your Score: ${currentScore}<br>Enter any key or Click on the screen to start the Game again`
 
         started = false
         currentCombination = []
@@ -96,7 +103,9 @@ document.addEventListener('click', function(e) {
             setTimeout(levelUp, 1000)
         }
     }
-})
+}
+
+document.addEventListener('click', chaseGameStat)
 
 //shows shaking effect when user lost
 function gameOver() {
