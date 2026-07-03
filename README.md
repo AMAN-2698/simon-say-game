@@ -5,7 +5,7 @@ A classic, fully responsive Simon memory game built from scratch using strict HT
 This project focuses on clean state management, optimized DOM manipulation, and style CSS animations without relying on external libraries.
 
 ## Live Demo
-You can play the game here: [https://aman-2698.github.io/simon-say-game/]
+* **[You can play the game here](https://aman-2698.github.io/simon-say-game/)**
 
 ## Features
 * **Dynamic Sequence Generation:** Uses randomized arrays to generate progressively difficult memory sequences.
